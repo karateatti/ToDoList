@@ -9,9 +9,10 @@
 
 @foreach (var item in tdlst.ToDos)
 {
-    <h2>@item.Id</h2>
+@*     <h2>@item.Id</h2>*@
     <h2>Title: @item.Title</h2>
-    <input type="checkbox" @bind="item.IsDone"></input>
+    <input name="Done" type="checkbox" @bind="item.IsDone"></input>
+    <label for="Done">Done</label>
     <br />
     <h3>Description: </h3>
     <p>@item.Description</p>
