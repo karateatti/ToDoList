@@ -1,0 +1,72 @@
+﻿@inject ToDoList tdlst
+
+﻿<div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Remove ToDo</h4>
+                <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <h1>Are you sure you want to remove this ToDo?</h1>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="@ModalCancel">Cancel</button>
+                    @if (canClick())
+                    {
+                        <button type="submit" class="btn btn-outline-danger" @onclick="@ModalOk">Remove</button>
+
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" disabled @onclick="@ModalOk">Create</button>
+
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool canClick()
+    {
+        return true;
+    }
+
+
+    protected override void OnInitialized()
+    {
+
+
+        base.OnInitialized();
+    }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private Task ModalOk()
+    {
+        foreach (var item in tdlst.ToDos)
+        {
+            if (item.Id == Id)
+            {
+                tdlst.ToDos.Remove(item);
+                break;
+            }
+        }
+
+        return OnClose.InvokeAsync(true);
+    }
+
+
+}
+

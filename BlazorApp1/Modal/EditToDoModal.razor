@@ -1,0 +1,90 @@
+﻿@inject ToDoList tdlst
+
+﻿<div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit ToDo</h4>
+                <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <label for="title">Title:</label>
+                    <input type="text" class="form-control" id="title" @bind="@Title" required>
+                    <label for="description">Description:</label>
+                    <input type="text" class="form-control" id="description" @bind="@Description" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" @onclick="@ModalCancel">Cancel</button>
+                    @if (canClick())
+                    {
+                        <button type="submit" class="btn btn-primary btn-light" @onclick="@ModalOk">Edit</button>
+
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" disabled @onclick="@ModalOk">Edit</button>
+
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
+
+    protected override void OnParametersSet()
+    {
+        var item = tdlst.ToDos.Find(x => x.Id == Id);
+        Title = item.Title;
+        Description = item.Description;
+        base.OnParametersSet();
+    }
+
+    private bool canClick()
+    {
+        if (Title == "" || Description == "")
+        {
+            return false;
+        }
+
+        if (Title == tdlst.ToDos.Find(x => x.Id == Id).Title && Description == tdlst.ToDos.Find(x => x.Id == Id).Description)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    protected override void OnInitialized()
+    {
+
+
+        base.OnInitialized();
+    }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private Task ModalOk()
+    {
+        var item = tdlst.ToDos.Find(x => x.Id == Id);
+        item.Title = Title;
+        item.Description = Description;
+
+        return OnClose.InvokeAsync(true);
+    }
+
+
+}
+

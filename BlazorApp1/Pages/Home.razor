@@ -1,0 +1,103 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject ToDoList tdlst
+
+<PageTitle>ToDo App</PageTitle>
+
+<h1>ToDo App</h1>
+
+@foreach (var item in tdlst.ToDos)
+{
+    <h2>@item.Id</h2>
+    <h2>Title: @item.Title</h2>
+    <input type="checkbox" @bind="item.IsDone"></input>
+    <br />
+    <h3>Description: </h3>
+    <p>@item.Description</p>
+    <button class="btn btn-primary" @onclick="() =>showEditToDoModal(item.Id)">Edit</button>
+    <button class="btn btn-danger" @onclick="() =>showDeleteToDoModal(item.Id)">Delete</button>
+
+    <hr />
+}
+
+<button class="btn btn-primary" @onclick="showAddToDoModal">Add ToDo</button>
+
+@if (showAddToDoModalHelper)
+{
+    <AddToDoModal OnClose="closeAddToDoModal"></AddToDoModal>
+}
+
+@if (showEditToDoModalHelper)
+{
+    <EditToDoModal OnClose="closeEditToDoModal" Id="editToDoId"></EditToDoModal>
+}
+
+@if (showDeleteToDoModalHelper)
+{
+    <RemoveToDoModal OnClose="closeDeleteToDoModal" Id="deleteToDoId"></RemoveToDoModal>
+}
+
+
+
+@code {
+
+
+    public void baseValues()
+    {
+        tdlst.ToDos.Add(new ToDo { Title = "Test", IsDone = false, Description = "Test" });
+        tdlst.ToDos.Add(new ToDo { Title = "Test2", IsDone = false, Description = "Test2" });
+        tdlst.ToDos.Add(new ToDo { Title = "Test3", IsDone = false, Description = "Test3" });
+        tdlst.ToDos.Add(new ToDo { Title = "Test4", IsDone = false, Description = "Test4" });
+        tdlst.ToDos.Add(new ToDo { Title = "Test5", IsDone = false, Description = "Test5" });
+
+
+
+    }
+
+    protected override void OnInitialized()
+    {
+        baseValues();
+        base.OnInitialized();
+    }
+    
+    public bool showAddToDoModalHelper { get; set; } = false;
+
+    public void showAddToDoModal()
+    {
+        showAddToDoModalHelper = true;
+    }
+
+    public void closeAddToDoModal()
+    {
+        showAddToDoModalHelper = false;
+    }
+
+    public bool showEditToDoModalHelper { get; set; } = false;
+    public int editToDoId { get; set; }
+
+    public void showEditToDoModal(int id)
+    {
+        editToDoId = id;
+        showEditToDoModalHelper = true;
+    }
+
+    public void closeEditToDoModal()
+    {
+        showEditToDoModalHelper = false;
+    }
+
+    public bool showDeleteToDoModalHelper { get; set; } = false;
+    public int deleteToDoId { get; set; }
+
+    public void showDeleteToDoModal(int id)
+    {
+        deleteToDoId = id;
+        showDeleteToDoModalHelper = true;
+    }
+
+    public void closeDeleteToDoModal()
+    {
+        showDeleteToDoModalHelper = false;
+    }
+    
+}

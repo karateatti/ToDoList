@@ -1,0 +1,73 @@
+﻿@inject ToDoList tdlst
+
+﻿<div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add ToDo</h4>
+                <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <label for="title">Title:</label>
+                    <input type="text" class="form-control" id="title" @bind="@Title" required>
+                    <label for="description">Description:</label>
+                    <input type="text" class="form-control" id="description" @bind="@Description" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" @onclick="@ModalCancel">Cancel</button>
+                    @if (canClick())
+                    {
+                        <button type="submit" class="btn btn-primary btn-light" @onclick="@ModalOk">Create</button>
+
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" disabled @onclick="@ModalOk">Create</button>
+
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<bool> OnClose { get; set; }
+    public string Title { get; set; } = "";
+    public string Description { get; set; } = "";
+
+
+    private bool canClick()
+    {
+        if (Title == "" || Description == "")
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    protected override void OnInitialized()
+    {
+
+
+        base.OnInitialized();
+    }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private Task ModalOk()
+    {
+        tdlst.ToDos.Add(new ToDo { Title = Title, IsDone = false, Description = Description });
+
+        return OnClose.InvokeAsync(true);
+    }
+
+
+}
+
