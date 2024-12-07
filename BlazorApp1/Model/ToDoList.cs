@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -26,7 +27,27 @@ namespace BlazorApp1.Model
                 ToDoList root = JsonSerializer.Deserialize<ToDoList>(json, options);
 
                 ToDos = root.ToDos;
+                int helper = 0;
+                foreach (var todo in ToDos)
+                {
+                    if (todo.Id > helper)
+                    {
+                        helper = todo.Id;
+                    }
+                }
+                ToDo.idhelper = helper + 1;
             }
+        }
+
+        public Stream SaveFile()
+        {
+            var options = new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            };
+            string json = JsonSerializer.Serialize(this, options);
+            return new MemoryStream(Encoding.ASCII.GetBytes(json));
+
         }
     }
 

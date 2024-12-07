@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject ToDoList tdlst
 
+
 <PageTitle>ToDo App</PageTitle>
 
 <h1>ToDo App</h1>
@@ -42,21 +43,21 @@
 @code {
 
 
-    public void baseValues()
-    {
-        tdlst.ToDos.Add(new ToDo { Title = "Test", IsDone = false, Description = "Test" });
-        tdlst.ToDos.Add(new ToDo { Title = "Test2", IsDone = false, Description = "Test2" });
-        tdlst.ToDos.Add(new ToDo { Title = "Test3", IsDone = false, Description = "Test3" });
-        tdlst.ToDos.Add(new ToDo { Title = "Test4", IsDone = false, Description = "Test4" });
-        tdlst.ToDos.Add(new ToDo { Title = "Test5", IsDone = false, Description = "Test5" });
+    // public void baseValues()
+    // {
+    //     tdlst.ToDos.Add(new ToDo { Title = "Test", IsDone = false, Description = "Test" });
+    //     tdlst.ToDos.Add(new ToDo { Title = "Test2", IsDone = false, Description = "Test2" });
+    //     tdlst.ToDos.Add(new ToDo { Title = "Test3", IsDone = false, Description = "Test3" });
+    //     tdlst.ToDos.Add(new ToDo { Title = "Test4", IsDone = false, Description = "Test4" });
+    //     tdlst.ToDos.Add(new ToDo { Title = "Test5", IsDone = false, Description = "Test5" });
 
 
 
-    }
+    // }
 
     protected override void OnInitialized()
     {
-        baseValues();
+        // baseValues();
         base.OnInitialized();
     }
     

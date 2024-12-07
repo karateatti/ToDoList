@@ -1,5 +1,47 @@
 ﻿@page "/loadorsave"
+@inject HttpClient Http
+@inject ToDoList tdlst
+@inject IJSRuntime JS
+
+<script>
+    window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+        const arrayBuffer = await contentStreamReference.arrayBuffer();
+        const blob = new Blob([arrayBuffer]);
+        const url = URL.createObjectURL(blob);
+        const anchorElement = document.createElement('a');
+        anchorElement.href = url;
+        anchorElement.download = fileName ?? '';
+        anchorElement.click();
+        anchorElement.remove();
+        URL.revokeObjectURL(url);
+    }
+</script>
+
+<PageTitle>Load or Save</PageTitle>
+
+<h1>Load or Save</h1>
+
+<div>
+    <button class="btn btn-primary" @onclick="Load">Load</button>
+    <button class="btn btn-primary" @onclick="Save">Save</button>
+</div>
 
 @code {
 
+    public async Task Load()
+    {
+        await tdlst.LoadFile(Http);
+
+    }
+
+    private async Task Save()
+    {
+        var fileStream = tdlst.SaveFile();
+
+        var fileName = "output.json";
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
 }
